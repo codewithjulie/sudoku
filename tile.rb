@@ -1,6 +1,6 @@
 class Tile
 
-    attr_accessor :value, :color
+    attr_accessor :value, :color, :given
 
     def initialize(value, given)
         @value = value

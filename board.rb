@@ -52,14 +52,20 @@ class Board
     def update_position(position, value)
         if valid_position?(position) && valid_value?(value)
             self[position] = Tile.new(value.to_s, false)
+        else
+            raise "position is not valid"
         end
         
     end
 
     def valid_position?(position)
         row, col = position
-        if row < 0 || row > 8 && col < 0 || col > 8
+        if (row < 0 || row > 8) && (col < 0 || col > 8)
             return false
+        elsif
+            if self[position]
+                return false if self[position].given
+            end
         else
             true
         end
@@ -71,20 +77,46 @@ class Board
 
 
     def solved?
-        puts "yes or no"
+        self.all_filled? && self.solved_rows?
+    end
+
+    def grid_with_nums
+        grid_num = []
+        @grid.each do |row|
+            grid_num << row.map do |tile| 
+                if tile
+                    tile.value
+                else
+                    nil
+                end
+            end
+        end
+        grid_num
     end
 
     def solved_rows?
-        
+        grid_num = self.grid_with_nums
+        grid_num.all? do |row|
+            row.uniq.length == 9
+        end
     end
+
+    def all_filled?
+        @grid.all? do |row|
+            row.all? {|el| el != nil}
+        end
+    end
+
 end
 
 board = Board.new
 
-board.load_puzzle('puzzles/sudoku1.txt')
+board.load_puzzle('puzzles/sudoku1_almost.txt')
+
+# board.render
+
+board.update_position([0, 0], 4)
 
 board.render
 
-board.update_position([0, 0], 2)
-
-board.render
+puts board.solved?
