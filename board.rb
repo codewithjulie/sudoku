@@ -77,7 +77,10 @@ class Board
 
 
     def solved?
-        self.all_filled? && self.solved_rows? && self.solved_columns?
+        self.all_filled? && 
+        self.solved_rows? && 
+        self.solved_columns? && 
+        self.solved_3_by_3?
     end
 
     def grid_with_nums
@@ -126,11 +129,23 @@ class Board
         end
     end
 
+    def solved_3_by_3?
+        mini_grid_values = []
+        3.times do |factor|
+            (factor...factor * 3).each do |row|
+                (factor...factor * 3).each do |col|
+                    mini_grid_values << @grid[row][col].value
+                end
+            end
+        end
+        mini_grid_values.uniq.length == 9
+    end
+
 end
 
 board = Board.new
 
-board.load_puzzle('puzzles/sudoku1_solved.txt')
+board.load_puzzle('puzzles/sudoku_rows_solved.txt')
 
 # board.render
 
