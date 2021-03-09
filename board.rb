@@ -50,16 +50,18 @@ class Board
     end
 
     def update_position(position, value)
-        if valid_position?(position) && valid_value?(value)
-            self[position] = Tile.new(value.to_s, false)
-        else
-            raise "position is not valid"
-        end
-        
+        self[position] = Tile.new(value.to_s, false)
     end
 
     def valid_position?(position)
+        number_strings = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
+        return false if position.length != 2
+
+        return false if position.none? {|idx| number_strings.include?(idx)}
+        position.each_with_index {|pos, idx| position[idx] = position[idx].to_i}
+
         row, col = position
+
         if (row < 0 || row > 8) && (col < 0 || col > 8)
             return false
         elsif
@@ -72,7 +74,12 @@ class Board
     end
 
     def valid_value?(value)
-        return value.is_a?(Integer) && value >= 0 && value < 9
+        p value
+        number_strings = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+
+        number_strings.include?(value)
+
+        # return value.is_a?(Integer) && value >= 0 && value < 9
     end
 
 
@@ -142,15 +149,3 @@ class Board
     end
 
 end
-
-board = Board.new
-
-board.load_puzzle('puzzles/sudoku_rows_solved.txt')
-
-# board.render
-
-# board.update_position([0, 0], 4)
-
-board.render
-
-puts board.solved?
