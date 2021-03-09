@@ -77,7 +77,7 @@ class Board
 
 
     def solved?
-        self.all_filled? && self.solved_rows?
+        self.all_filled? && self.solved_rows? && self.solved_columns?
     end
 
     def grid_with_nums
@@ -107,15 +107,34 @@ class Board
         end
     end
 
+    def solved_columns?
+
+        transposed_grid = []
+        (0...9).each do |col|
+            new_row = []
+            (0...9).each do |row|
+                if @grid[row][col]
+                    new_row <<  @grid[row][col].value
+                else
+                    new_row << nil
+                end
+            end
+            transposed_grid << new_row
+        end
+        transposed_grid.all? do |row|
+            row.uniq.length == 9
+        end
+    end
+
 end
 
 board = Board.new
 
-board.load_puzzle('puzzles/sudoku1_almost.txt')
+board.load_puzzle('puzzles/sudoku1_solved.txt')
 
 # board.render
 
-board.update_position([0, 0], 4)
+# board.update_position([0, 0], 4)
 
 board.render
 
